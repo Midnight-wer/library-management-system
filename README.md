@@ -7,8 +7,9 @@
 ## 快速开始（3 步运行）
 
 ```bash
-# 1. 克隆项目
-git clone https://github.com/<你的用户名>/library-management-system.git
+# 1. 克隆项目（GitHub / Gitee 任选其一，国内推荐 Gitee）
+git clone https://gitee.com/happy-wang-jia-wei/library-management-system.git
+# 或：git clone https://github.com/Midnight-wer/library-management-system.git
 cd library-management-system
 
 # 2. 导入数据库（需先启动 MySQL，账号 root 默认无密码）
