@@ -178,7 +178,7 @@ exit /b 1
 
 :NO_NODE
 color 4F
-echo   [失败] 未检测到 Node.js, 请安装 Node.js 16+ 并配置 PATH 环境变量后重试
+echo   [失败] 未检测到 Node.js, 请安装 Node.js 18+ 并配置 PATH 环境变量后重试
 pause
 exit /b 1
 

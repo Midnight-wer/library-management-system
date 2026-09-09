@@ -27,7 +27,7 @@ mysql -u root < 数据库脚本/library.sql
 | 管理员 | admin | 123456 |
 | 普通用户 | zhangsan | 123456 |
 
-> 环境要求：JDK 1.8+、Node.js 16+、MySQL 8.0（Maven 无需单独安装，项目自带 mvnw）。
+> 环境要求：JDK 1.8+、Node.js 18+（Vite 5 要求）、MySQL 8.0（Windows 下 Maven 无需单独安装，后端自带 `mvnw.cmd`）。
 > 详细环境配置、IDEA 启动、生产部署说明见下文对应章节。
 
 ---
@@ -130,8 +130,8 @@ mysql -u root < 数据库脚本/library.sql
 | 软件 | 版本要求 | 说明 |
 |------|---------|------|
 | JDK | 1.8 及以上 | 推荐 JDK 8 或 JDK 17 |
-| Maven | 3.6+ | 用于后端依赖管理 |
-| Node.js | 16+ | 推荐 18 LTS |
+| Maven | 3.6+ | 后端依赖管理；Windows 下可用后端目录自带的 `mvnw.cmd` 免安装 |
+| Node.js | 18 及以上 | Vite 5 要求，推荐 18 LTS 或 20 LTS |
 | MySQL | 8.0 | 数据库 |
 | IDEA / VSCode | 任意版本 | 开发工具 |
 
@@ -176,10 +176,14 @@ Linux/macOS 用户使用 `start-linux.sh` 与 `stop-linux.sh`。
 
 ### 4.1 执行 SQL 脚本
 
-方式一（命令行）：
+方式一（命令行，默认 root 无密码）：
 
 ```bash
-mysql -u root -p < 数据库脚本/library.sql
+# 在项目根目录执行（脚本自带 CREATE DATABASE / USE，无需手动建库）
+mysql -u root < 数据库脚本/library.sql
+
+# 若你的 MySQL 设置了密码，改用：
+# mysql -u root -p < 数据库脚本/library.sql
 ```
 
 方式二（图形化工具 Navicat / DataGrip / MySQL Workbench）：
@@ -271,7 +275,7 @@ http://localhost:8080/api/user/login
 
 ```bash
 # 进入前端目录
-cd frontend
+cd 前端界面
 
 # 安装依赖(首次较慢,建议使用淘宝镜像)
 npm install --registry=https://registry.npmmirror.com
@@ -317,16 +321,16 @@ npm run preview
 **后端打包：**
 
 ```bash
-cd backend
+cd 后端服务
 mvn clean package -DskipTests
 # 产物: 后端服务/target/library-admin-1.0.0.jar
-nohup java -jar library-admin-1.0.0.jar > nohup.out 2>&1 &
+nohup java -jar target/library-admin-1.0.0.jar > nohup.out 2>&1 &
 ```
 
 **前端打包：**
 
 ```bash
-cd frontend
+cd 前端界面
 npm install
 npm run build
 # 产物: 前端界面/dist/
@@ -612,7 +616,7 @@ A：检查 MySQL 是否启动、`library_db` 是否已创建、`application.yml`
 A：确认后端已启动且监听 8080 端口；Vite 已配置代理，开发模式不要直接访问 8080，应访问 5173。
 
 **Q3：上传的头像/封面打不开？**
-A：访问路径应为 `http://localhost:5173/uploads/xxx.jpg`（通过 Vite 代理）或 `http://localhost:8080/api/uploads/xxx.jpg`（直连后端）。
+A：上传接口返回的访问路径形如 `/api/uploads/yyyy/MM/dd/xxx.jpg`，通过前端访问为 `http://localhost:5173/api/uploads/xxx.jpg`（开发模式，Vite 代理）或 `http://localhost:4173/api/uploads/xxx.jpg`（生产预览）；直连后端为 `http://localhost:8080/api/uploads/xxx.jpg`。注意路径中必须包含 `/api` 前缀。
 
 **Q4：Token 过期如何处理？**
 A：默认 24 小时有效期，过期后响应拦截器自动跳转登录页，重新登录即可。
