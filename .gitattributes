@@ -1,0 +1,11 @@
+# 跨平台行尾规范: 保证仓库在 Windows/Linux 间 checkout 时脚本可执行
+*.sh   text eol=lf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# 二进制文件不做行尾转换
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.doc  binary
+*.jar  binary

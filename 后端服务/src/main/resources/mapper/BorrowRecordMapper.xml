@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.library.mapper.BorrowRecordMapper">
+
+    <resultMap id="borrowResultMap" type="com.library.entity.BorrowRecord">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="book_id" property="bookId"/>
+        <result column="borrow_time" property="borrowTime"/>
+        <result column="return_time" property="returnTime"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="book_name" property="bookName"/>
+        <result column="author" property="author"/>
+        <result column="cover" property="cover"/>
+        <result column="username" property="username"/>
+        <result column="nickname" property="nickname"/>
+    </resultMap>
+
+    <!-- 分页查询借阅记录(关联图书、用户信息) -->
+    <select id="selectBorrowPage" resultMap="borrowResultMap">
+        SELECT r.id, r.user_id, r.book_id, r.borrow_time, r.return_time, r.status, r.remark, r.create_time,
+               b.book_name, b.author, b.cover,
+               u.username, u.nickname
+        FROM borrow_record r
+        LEFT JOIN book b ON r.book_id = b.id
+        LEFT JOIN user u ON r.user_id = u.id
+        <where>
+            <if test="userId != null">
+                AND r.user_id = #{userId}
+            </if>
+            <if test="status != null and status != ''">
+                AND r.status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND b.book_name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY r.id DESC
+    </select>
+
+    <!-- 导出查询(不分页) -->
+    <select id="selectExportList" resultMap="borrowResultMap">
+        SELECT r.id, r.user_id, r.book_id, r.borrow_time, r.return_time, r.status, r.remark, r.create_time,
+               b.book_name, b.author, b.cover,
+               u.username, u.nickname
+        FROM borrow_record r
+        LEFT JOIN book b ON r.book_id = b.id
+        LEFT JOIN user u ON r.user_id = u.id
+        <where>
+            <if test="status != null and status != ''">
+                AND r.status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND b.book_name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY r.id DESC
+    </select>
+</mapper>

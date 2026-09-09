@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.library.mapper.BookMapper">
+
+    <resultMap id="bookResultMap" type="com.library.entity.Book">
+        <id column="id" property="id"/>
+        <result column="book_name" property="bookName"/>
+        <result column="author" property="author"/>
+        <result column="isbn" property="isbn"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="cover" property="cover"/>
+        <result column="total_num" property="totalNum"/>
+        <result column="borrow_num" property="borrowNum"/>
+        <result column="introduction" property="introduction"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 分页查询图书列表 -->
+    <select id="selectBookPage" resultMap="bookResultMap">
+        SELECT id, book_name, author, isbn, category_id, cover, total_num, borrow_num,
+               introduction, create_time, update_time
+        FROM book
+        <where>
+            <if test="bookName != null and bookName != ''">
+                AND book_name LIKE CONCAT('%', #{bookName}, '%')
+            </if>
+            <if test="author != null and author != ''">
+                AND author LIKE CONCAT('%', #{author}, '%')
+            </if>
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 各分类图书数量统计(首页饼图): LEFT JOIN 保证图书数为 0 的分类也返回 -->
+    <select id="selectCategoryBookCount" resultType="java.util.Map">
+        SELECT c.id AS categoryId,
+               c.category_name AS categoryName,
+               COUNT(b.id) AS bookCount
+        FROM book_category c
+        LEFT JOIN book b ON b.category_id = c.id
+        GROUP BY c.id, c.category_name
+        ORDER BY c.id ASC
+    </select>
+</mapper>

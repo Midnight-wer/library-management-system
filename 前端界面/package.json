@@ -1,0 +1,29 @@
+{
+  "name": "library-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "图书管理系统前端",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "axios": "^1.6.2",
+    "echarts": "^5.4.3",
+    "element-plus": "^2.4.4",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.0",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vue/test-utils": "^2.5.0",
+    "jsdom": "^29.1.1",
+    "vite": "^5.0.10",
+    "vitest": "^2.1.9"
+  }
+}

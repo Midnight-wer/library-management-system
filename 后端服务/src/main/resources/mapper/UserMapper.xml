@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.library.mapper.UserMapper">
+
+    <resultMap id="userResultMap" type="com.library.entity.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="phone" property="phone"/>
+        <result column="avatar" property="avatar"/>
+        <result column="role" property="role"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 分页查询用户列表 -->
+    <select id="selectUserPage" resultMap="userResultMap">
+        SELECT id, username, password, nickname, phone, avatar, role, create_time, update_time
+        FROM user
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (username LIKE CONCAT('%', #{keyword}, '%')
+                  OR nickname LIKE CONCAT('%', #{keyword}, '%')
+                  OR phone LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="role != null and role != ''">
+                AND role = #{role}
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+</mapper>
